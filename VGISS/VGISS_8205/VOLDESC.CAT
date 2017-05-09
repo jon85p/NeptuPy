@@ -1,0 +1,45 @@
+PDS_VERSION_ID          = PDS3
+RECORD_TYPE             = STREAM
+
+OBJECT                  = VOLUME
+  VOLUME_SERIES_NAME    = "VOYAGERS TO THE OUTER PLANETS"
+  VOLUME_SET_NAME       = "PROCESSED VOYAGER IMAGES"
+  VOLUME_SET_ID         = USA_NASA_PDS_VGISS_82XX
+  VOLUMES               = 10
+  VOLUME_NAME           = 
+              "PROCESSED VOYAGER 2 NEPTUNE IMAGES 10800.00 -- 10999.59" 
+  VOLUME_ID             = "VGISS_8205"
+  VOLUME_VERSION_ID     = "VERSION 1"
+  VOLUME_FORMAT         = "NONE"
+  MEDIUM_TYPE           = "N/A"
+  DATA_SET_ID           = "VG2-N-ISS-2/3/4/6-PROCESSED-V1.0"
+  PUBLICATION_DATE      = 2013-10-25
+DESCRIPTION             = "This volume contains calibrated and
+geometrically corrected versions of the Voyager images. Also provided
+are ancillary data files and images at various intermediate stages in
+the processing."
+
+  OBJECT                        = DATA_PRODUCER
+    INSTITUTION_NAME            = "SETI INSTITUTE"
+    FACILITY_NAME               = "SETI INSTITUTE"
+    NODE_NAME                   = "PLANETARY RINGS"
+    FULL_NAME                   = "MARK R. SHOWALTER"
+    ADDRESS_TEXT                = "SETI INSTITUTE
+                                   189 BERNARDO AVE
+                                   MOUNTAIN VIEW, CA 94043"
+    TELEPHONE_NUMBER            = "6508100234"
+    ELECTRONIC_MAIL_TYPE        = "INTERNET"
+    ELECTRONIC_MAIL_ID          = "mshowalter@seti.org"
+  END_OBJECT                    = DATA_PRODUCER
+
+  OBJECT                        = CATALOG
+    ^DATA_SET_CATALOG           = "DATASET.CAT"
+    ^INSTRUMENT_CATALOG         = "VG2NINST.CAT"
+    ^INSTRUMENT_HOST_CATALOG    = "VG2HOST.CAT"
+    ^MISSION_CATALOG            = "MISSION.CAT"
+    ^PERSONNEL_CATALOG          = "PERSON.CAT"
+    ^REFERENCE_CATALOG          = "REF.CAT"
+  END_OBJECT                    = CATALOG
+
+END_OBJECT              = VOLUME
+END
