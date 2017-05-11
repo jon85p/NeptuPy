@@ -8,11 +8,11 @@ TODO
 
 # Tools
 ## 1. Python Utilities
-## 1.1 AstroPy
+### 1.1 AstroPy
 The Astropy Project is a community effort to develop a core package for astronomy using the Python programming language and improve usability, interoperability, and collaboration between astronomy Python packages. The core astropy package contains functionality aimed at professional astronomers and astrophysicists, but may be useful to anyone developing astronomy software. The Astropy Project also includes "affiliated packages," Python packages that are not necessarily developed by the core development team, but share the goals of Astropy, and often build from the core package's code and infrastructure. [Info](http://www.astropy.org/)
-## 1.2 PhotUtils
+### 1.2 PhotUtils
 Photutils is an affiliated package of Astropy to provide tools for detecting and performing photometry of astronomical sources. It is an open source (BSD licensed) Python package. [Info](http://photutils.readthedocs.io/en/stable/)
-## 1.3 SpiceyPy
+### 1.3 SpiceyPy
 SpiceyPy is a python wrapper for the SPICE Toolkit. SPICE is an essential tool for scientists and engineers alike in the planetary science field for Solar System Geometry. [Info](http://spiceypy.readthedocs.io/en/master/)
 
 ## 2. ISIS (USGS)
