@@ -3,7 +3,7 @@ from astropy.io import fits
 import numpy as np
 import os
 from marcas_salida import exporta_reg
-from photutils import daofind
+from photutils import DAOStarFinder, IRAFStarFinder
 from astropy.stats import mad_std
 from photutils import aperture_photometry, CircularAperture
 
@@ -33,14 +33,15 @@ def soloruta(entrada):
     return carpeta
 
 registro_log = ''
-ruta1 = '../VGISS_FITS/'
+NEPTUPY_ROOT = os.environ("NEPTUPY")
+ruta1 = NEPTUPY_ROOT + 'VGISS_FITS/'
 rutas1 = os.listdir(ruta1)
 rutasFITS = []
 for ruta in rutas1:
     directorio = ruta1 + ruta + '/'
     #Lista de archivos total:
     archivos = os.listdir(directorio)
-    #Agregar solo los CALIB:
+    #Agregar solo los GEOMED:
     for archivo in archivos:
         if ('GEOMED' in archivo) and ('.fits' in archivo):
             rutasFITS.append(directorio + archivo)
@@ -53,22 +54,31 @@ for actual in rutasFITS:
         archivo_fits = fits.open(actual)
         data = archivo_fits[0].data
         data2 = data - np.median(data)
-        # Next 2 lines determine search quality
+        # Next 2 lines determine search quality and methdod
+        # Two methods are involved, IRAF and DAO:
+        # DAO: http://photutils.readthedocs.io/en/stable/api/photutils.detection.DAOStarFinder.html#photutils.detection.DAOStarFinder
+        # IRAF: http://photutils.readthedocs.io/en/stable/api/photutils.detection.IRAFStarFinder.html#photutils.detection.IRAFStarFinder
         bkg_sigma = mad_std(data2)
-        sources = daofind(data2, fwhm=4., threshold=5.*bkg_sigma)
+        Starfind = DAOStarFinder(fwhm=3.0, threshold=5.*bkg_sigma)
+        # Alternative method
+        # daofind = IRAFStarFinder(fwhm=3.0, threshold=5.*bkg_sigma)
+        sources = Starfind(data2)
         nombresalidareg = soloruta(actual) + nombre_sin_ext(actual)[0] + '_5.reg'
         aguardar = exporta_reg(nombresalidareg)
         contador = 0
         for punto in sources:
+            # TODO
+            # Ignore marks inside Neptune
+            # SPICE Task
             contador = contador + 1
-            xcord = punto['xcentroid'] + 1.0
-            ycord = punto['ycentroid'] + 1.0
+            xcord = punto['xcentroid'].value + 1.0
+            ycord = punto['ycentroid'].value + 1.0
             aguardar.agrega_circulo(xcenter = xcord, ycenter = ycord, radius=5, texto='S' + str(contador))
         aguardar.escribe_reg()
         texto = 'Van ' + str(conteo_arch) + ' de ' + str(cantidaddefits) + '\n'
         print(texto, end='')
     except:
-        texto = 'PROBLEMA EN' + actual
+        texto = 'PROBLEM IN' + actual
         print(texto, end='')
 registro_log = registro_log + texto
 g = open('log_out.txt', 'wb')

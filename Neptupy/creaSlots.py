@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
-from os import listdir
+from os import listdir, environ
 from main import imagen
 
 # Change this line "clave" and orden (from 01 to 10):
 orden = "01"
 clave = "GEOMED"
-out_folder = "slots/" + clave + "/"
-# Indica que mira solo en la carpeta VGISS_orden
+NEPTUPY_ROOT = environ['NEPTUPY']
+out_folder = NEPTUPY_ROOT + "slots/" + clave + "/"
 
-folder = "../VGISS_FITS/VGISS_82" + orden + "/"
+# Indica que mira solo en la carpeta VGISS_orden
+folder = NEPTUPY_ROOT + "VGISS_FITS/VGISS_82" + orden + "/"
 lista_desorden = listdir(folder)
 lista_gral = []
 for arch in lista_desorden:
