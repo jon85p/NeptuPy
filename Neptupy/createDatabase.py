@@ -23,8 +23,8 @@ def genDB(file_name, NEPTUPY_ROOT):
     c.execute('CREATE TABLE imgs(id_img varchar(10), img_num varchar(20), id_tar1 int, id_fil1 int, expo_time float, start_time datetime, stop_time datatime, id_cam1 int, location varchar(100), id_type1 int, CONSTRAINT pk_img PRIMARY KEY (id_img),CONSTRAINT fk_type FOREIGN KEY (id_type1) REFERENCES types(id_type), CONSTRAINT fk_tar FOREIGN KEY (id_tar1) REFERENCES targets(id_tar), CONSTRAINT fk_fil FOREIGN KEY (id_fil1) REFERENCES filters(id_fil), CONSTRAINT fk_cam FOREIGN KEY (id_cam1) REFERENCES cams(id_cam))')
     targets = [(1, 'NEREID'), (2, 'NEPTUNE'), (3, 'SKY'), (4, 'TRITON'), (5, 'DARK'),
                (6, 'STAR'), (7, 'PROTEUS'), (8, 'N RINGS'), (9, 'SIGMA SGR'), (10, 'LARISSA'),
-               (11, 'BETACMA'), (12, 'VEGA'), (13, 'ORION'), (14, 'PLAQUE'), (15, 'CALLAMPS'),
-               (16, 'PLEIADES'), (17, 'SCORPIUS'), (18, 'CAL LAMPS')]
+               (11, 'BETACMA'), (12, 'VEGA'), (13, 'ORION'), (14, 'PLAQUE'), (15, 'CAL LAMPS'),
+               (16, 'PLEIADES'), (17, 'SCORPIUS')]
     targets_dict = dict(targets)
     cams = [(1, 'IMAGING SCIENCE SUBSYSTEM - NARROW ANGLE'),
             (2, 'IMAGING SCIENCE SUBSYSTEM - WIDE ANGLE')]
@@ -70,7 +70,7 @@ def main():
     # Check database existence
     NEPTUPY_ROOT = os.environ["NEPTUPY"]
     file_name = NEPTUPY_ROOT + 'general.db'
-    if  os.path.exists(file_name) == False:
+    if not os.path.exists(file_name):
       genDB(file_name, NEPTUPY_ROOT)
     else:
       print("Database already exists!\n Quitting")
