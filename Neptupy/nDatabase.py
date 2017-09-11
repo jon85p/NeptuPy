@@ -17,7 +17,7 @@ types = [(1, 'RAW'), (2, 'CALIB'), (3, 'GEOMED'), (4, 'CLEANED')]
 types_dict = dict(types)
 
 def searchDB(target=None,expo_1=None, expo_2=None, date_st=None, date_sp=None, filterr=None,
-             typee=None, camera=None):
+             typee=None, camera=None, order='ASC'):
 	'''
 	Search for location of fits files according a set of search conditions:
 
@@ -30,16 +30,16 @@ def searchDB(target=None,expo_1=None, expo_2=None, date_st=None, date_sp=None, f
 	filterr: str Filter to look up, default None, ex = 'UV'
 	typee: str Type of image, default None, ex = 'GEOMED'
 	camera: str Camera of lookup, default None, ex = 'IMAGING SCIENCE SUBSYSTEM - WIDE ANGLE'
-
+	order: str ASC or DESC, results in ascendent or descendent date
 	return
-	A strings list with location of located images	
+	A list of lists with this info: [location, target, filter, expo, start, stop, instrument]
 	'''
 	if not os.path.exists(NR + "general.db"):
 		print("Database general.db not found!, generate it with createDatabase.py firsts")
 		exit(1)
 	conn = sqlite3.connect(NR + "general.db")
 	c = conn.cursor()
-	sql = "SELECT location FROM imgs WHERE(id_tar1 AND id_fil1 AND expo_t1 AND expo_t2 AND start_time1 AND start_time2 AND id_type1 AND id_cam1)"
+	sql = "imgs WHERE(id_tar1 AND id_fil1 AND expo_t1 AND expo_t2 AND id_type1 AND id_cam1) AND (start_time BETWEEN 'start_time1' AND 'start_time2') ORDER BY start_time ASCorDESC"
 	# Replace strings of query with params data
 	if target:
 		sql = sql.replace("id_tar1", "id_tar1="+str(list(targets_dict.values()).index(target)+1))
@@ -59,18 +59,35 @@ def searchDB(target=None,expo_1=None, expo_2=None, date_st=None, date_sp=None, f
 	else:
 		sql = sql.replace("expo_t2", "expo_time")
 	if date_st:
-		sql = sql.replace("start_time1", "start_time >= " + date_st)
+		sql = sql.replace("start_time1", date_st)
 	else:
-		sql = sql.replace("start_time1", "start_time")
+		sql = sql.replace("start_time1", "1989-06-05 08:54:45.11")
 	if date_sp:
-		sql = sql.replace("start_time2", "start_time <= " + date_sp)
+		sql = sql.replace("start_time2", date_sp)
 	else:
-		sql = sql.replace("start_time2", "start_time")
+		sql = sql.replace("start_time2", "1989-09-29 17:44:40.99")
+	if order == 'ASC':
+		sql = sql.replace("ASCorDESC", "ASC")
+	elif order == 'DESC':
+		sql = sql.replace("ASCorDESC", "DESC")
+	else:
+		raise ValueError("Order Error")
 	# SQL query done!
 	list_out = []
+	sql = 'SELECT id_tar1, id_fil1, expo_time, start_time, stop_time, id_cam1, location FROM ' + sql
+	# print(sql)
 	c.execute(sql)
 	for row in c:
-		list_out.append(NR + str(row)[2:-3])
+		# print(row)
+		fileroute = NR + str(row[6])
+		target_im = targets_dict[int(row[0])]
+		filter_im = filters_dict[int(row[1])]
+		expo_im = float(row[2])
+		start_im = str(row[3])
+		stop_im = str(row[4])
+		cam_im = cams_dict[int(row[5])]
+		intern_list = [fileroute, target_im, filter_im, expo_im, start_im, stop_im, cam_im]
+		list_out.append(intern_list)
 	return list_out
 
 
